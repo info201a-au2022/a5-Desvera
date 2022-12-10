@@ -2,7 +2,6 @@ library("dplyr")
 library("ggplot2")
 library("tidyverse")
 library("plotly")
-library("leaflet")
 #set working directory to source files location when testing code here!!
 #create graphs here by making df and defining server logic to make graph(s).
 
@@ -31,7 +30,9 @@ co2_per_gdp <- emissions_data %>% select(year, country, co2_per_gdp)
 co2_per_gdp <- drop_na(co2_per_gdp)
 
 #plot formula from textbook chapter 17, figure 17.4 example.
-plot_ly(
+server <- function(input, output){
+  output$co2_plot <- renderPlotly({
+    co2_plot <- plot_ly(
   data = co2_per_gdp,      # pass in the data to be visualized
   x = co2_per_gdp$year, # use a formula to specify the column for the x-axis
   y = co2_per_gdp$co2_per_gdp, # use a formula to specify the column for the y-axis
@@ -43,4 +44,4 @@ plot_ly(
     title = "Yearly CO2 Emissions per dollar of GDP in each Country",                  # plot title
     xaxis = list(title = "Year", ticksuffix = ""), # axis label + format
     yaxis = list(title = "CO2 Emissions per dollar of GDP", ticksuffix = "kg/$")  # axis label + format
-  )
+  )})}

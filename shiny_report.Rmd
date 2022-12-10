@@ -1,0 +1,61 @@
+---
+title: "CO2 Report"
+author: "Desiree Vera"
+date: "2022-12-08"
+output: html_document
+runtime: shiny
+resource_files:
+- app_ui.R
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Introduction
+Co2 emissions and their contribution to climate change have been a topic of
+discussion, measure and comparison for decades. Different countries, depending
+on their level of per capita income have taken strides in decreasing their emissions,
+especially while still increasing their yearly GDP. Other countries are less
+wealthy, but still focussed on growing GDP and potentially less focused on their
+carbon footprint. For this reason I wanted to look into CO2 emissions per 1 unit
+of GDP. I found that in the emissions data collected over the course of 271 years,
+leading up to 2021. Kuwait had the highest measured CO2 emissions per unit of GDP
+many other countries were listed as having no emissions due to no data being collected on them.
+The average CO2 per gdp across the dataset was 0.42.
+
+
+```{r eruptions, echo=FALSE}
+source("app_server.R")
+source("app_ui")
+source("app.R")
+# Define content for the second page
+co2_page <- tabPanel(
+  "CO2 per GDP",
+  selectizeInput("Country", "Select Country", co2_per_gdp$country, selected = NULL,
+                 multiple = TRUE)
+)
+co2_vis <- selectInput(
+  inputId = "country",
+  label = "Select A Country",
+  choices = co2_per_gdp$country,
+  selected = NULL
+)
+description <- sidebarPanel(co2_page, co2_vis, 
+                            print("Looking at the countries with the highest emissions per dollar of GDP shows which are not doing enough to combat emissions."))
+
+plot_on_page <- mainPanel(
+  plotlyOutput(co2_plot)
+)
+# Pass each page to a multi-page layout (`navbarPage`)
+ui <- navbarPage(
+  "Exploring CO2 Emitted per dollar of GDP", # application title
+  intro,         # include the first page content
+  co2_page,         # include the second page content
+)
+
+```
+
+
+
+
